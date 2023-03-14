@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class exercise5 : MonoBehaviour
 {
@@ -21,10 +22,20 @@ public class exercise5 : MonoBehaviour
 
     public bool hasBeenClick;
 
+    public int lives = 3;
+
+    public AudioClip _audioClip;
+    public AudioSource _audioSource;
+
+    public TextMeshProUGUI texto;
+
+    
 
     private void Start()
-    {
+    { 
         points = 0;
+        lives = 3;
+        texto.text = $"Vidas: {lives}";
         hasBeenClick = false; 
         StartCoroutine("GenerateNextRandomPos");
         mat = GetComponent<MeshRenderer>().material;
@@ -38,7 +49,17 @@ public class exercise5 : MonoBehaviour
     {
         while (!gameOver)
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
+                if (!hasBeenClick)
+                {
+                    lives--;
+                    texto.text = $"Vidas: {lives}";
+                if (lives == 0)
+                    {
+                        gameOver = true;
+                        break; 
+                    }
+                }
             transform.position = GenerateRandomPos();
             mat.color = Color.blue;
             hasBeenClick = false;
@@ -51,9 +72,11 @@ public class exercise5 : MonoBehaviour
             mat.color = Color.green;
             points++;
             hasBeenClick = true;
+            _audioSource.PlayOneShot(_audioClip, 1.0f);
         }
         
     }
 
-
+    
+    
 }
